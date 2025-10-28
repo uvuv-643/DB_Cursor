@@ -5,8 +5,8 @@ r = redis.Redis(host='localhost', port=6379, decode_responses=True)
 
 # Test connection
 print("Connecting to Redis...")
-r.ping()
-print("✓ Connected successfully!")
+#r.ping()
+#print("✓ Connected successfully!")
 
 # Simple test
 print("\nTesting basic operations...")
