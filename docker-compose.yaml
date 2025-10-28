@@ -55,8 +55,8 @@ services:
     volumes:
       - redis-volume:/data
       - ./redis/redis.conf:/usr/local/etc/redis/redis.conf
-    expose:
-      - 6379
+    ports:
+      - "6379:6379"  
     command: redis-server /usr/local/etc/redis/redis.conf
     networks:
       - cursdb
