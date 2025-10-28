@@ -1,0 +1,70 @@
+version: '3.8'
+
+services:
+  react:
+    container_name: react
+    restart: unless-stopped
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    networks:
+      - cursdb
+
+  postgres:
+    container_name: postgres
+    restart: unless-stopped
+    image: postgres:16
+    ports:
+      - "5432:5432"
+    env_file:
+      - ./pgsql/.env
+    volumes:
+      - pgsql-volume:/var/lib/postgresql/data
+    networks:
+      - cursdb
+
+  nginx:
+    image: nginx:alpine
+    container_name: nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./certbot/www:/var/www/certbot/
+      - ./certbot/conf:/etc/letsencrypt/
+      - ./nginx/conf.d/:/etc/nginx/conf.d/
+    networks:
+      - cursdb
+
+  redis:
+    image: redis:alpine
+    container_name: redis
+    restart: unless-stopped
+    volumes:
+      - redis-volume:/data
+      - ./redis/redis.conf:/usr/local/etc/redis/redis.conf
+    expose:
+      - 6379
+    command: redis-server /usr/local/etc/redis/redis.conf
+    networks:
+      - cursdb
+
+  certbot:
+    image: certbot/certbot
+    container_name: certbot
+    volumes:
+      - ./certbot/conf:/etc/letsencrypt
+      - ./certbot/www:/var/www/certbot
+    command: certonly --webroot -w /var/www/certbot/ --email uvuv.space@gmail.com -d api.uvuv643.ru -d uvuv643.ru --agree-tos --cert-name cursdb
+
+
+networks:
+  cursdb:
+    driver: bridge
+
+volumes:
+  pgsql-volume:
+    driver: local
+  redis-volume:
+    driver: local
