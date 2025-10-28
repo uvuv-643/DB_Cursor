@@ -10,6 +10,17 @@ services:
     networks:
       - cursdb
 
+  fastapi:
+    container_name: fastapi
+    restart: unless-stopped
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    volumes:
+      - ./backend:/app
+    networks:
+      - cursdb
+
   postgres:
     container_name: postgres
     restart: unless-stopped
