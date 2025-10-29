@@ -1,13 +1,10 @@
-# import kagglehub
-
-# # Download latest version
-# path = kagglehub.dataset_download("terencicp/e-commerce-dataset-by-olist-as-an-sqlite-database")
-
-# print("Path to dataset files:", path)
-from promptbuilder import PromptConstructor
 import os
-from dotenv import load_dotenv
 import openai
+
+from dotenv import load_dotenv
+
+from contextbuilder import ContextConstructor
+from promptbuilder import PromptConstructor
 
 load_dotenv()
 
@@ -15,20 +12,8 @@ YANDEX_CLOUD_API_KEY = os.getenv("YANDEX_CLOUD_API_KEY")
 YANDEX_CLOUD_FOLDER = os.getenv("YANDEX_CLOUD_FOLDER")
 YANDEX_CLOUD_MODEL = os.getenv("YANDEX_CLOUD_MODEL")
 
-
-context = """
-SCHEMA main
-===========
-
-TABLE main.customers
--------------------
-  COLUMNS:
-    - customer_id TEXT
-    - customer_unique_id TEXT
-    - customer_zip_code_prefix INTEGER
-    - customer_city TEXT
-    - customer_state TEXT
-"""
+builder = ContextConstructor(db_backend="sqlite", sqlite_path="./db.sqlite")
+context = builder.build()
 
 user_prompt = "Покажи количество клиентов которые живут в городах, и zip коды которых начинаются на 12 и 13"
 
@@ -48,7 +33,7 @@ client = openai.OpenAI(
 response = client.responses.create(
     model=f"gpt://{constructor.folder}/{constructor.model}",
     input=prompt,
-    temperature=0.8,
+    temperature=0.5,
     max_output_tokens=1500
 )
 print("Model Response:\n", response.output[0].content[0].text)
