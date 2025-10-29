@@ -30,7 +30,7 @@ TABLE main.customers
     - customer_state TEXT
 """
 
-user_prompt = "Покажи количество клиентов по городам и регионам, где больше 100 клиентов"
+user_prompt = "Покажи количество клиентов которые живут в городах, и zip коды которых начинаются на 12 и 13"
 
 constructor = PromptConstructor(
     yandex_cloud_folder=YANDEX_CLOUD_FOLDER,
