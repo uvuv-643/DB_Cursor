@@ -1,7 +1,7 @@
 import redis
 
 # Connect to Redis server
-r = redis.Redis(host='localhost', port=6379, decode_responses=True)
+r = redis.Redis(host='localhost', port=6379, password='your_password', decode_responses=True)
 
 # Test connection
 print("Connecting to Redis...")
