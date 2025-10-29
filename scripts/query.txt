@@ -1,0 +1,25 @@
+SELECT
+    geolocation_city,
+    COUNT(order_id) AS total_orders,
+    AVG(DATEDIFF(order_delivered_customer_date, order_purchase_timestamp)) AS avg_delivery_time,
+    SUM(payment_value) AS total_revenue,
+    AVG(review_score) AS avg_review_score
+FROM
+    main.orders
+JOIN
+    main.order_reviews USING (order_id)
+JOIN
+    main.order_items USING (order_id)
+JOIN
+    main.sellers USING (seller_id)
+WHERE
+    EXTRACT(YEAR_MONTH FROM order_purchase_timestamp) >= EXTRACT(YEAR_MONTH FROM NOW() - INTERVAL '12 MONTH')
+GROUP BY
+    geolocation_city
+JOIN
+    main.sellers USING (seller_id)
+HAVING
+    AVG(price) > 150
+ORDER BY
+    avg_review_score DESC
+LIMIT 10;
