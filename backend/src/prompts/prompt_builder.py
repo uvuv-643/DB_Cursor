@@ -83,6 +83,28 @@ class PromptConstructor:
   ]
 }}
 
+Пользователь: "продукты где вес больше 500 и длина меньше 30 и высота больше 15 и ширина меньше 20 и количество фото больше 2 и название длиннее 10 символов и описание короче 200 символов где категория переводится как 'electronics'"
+
+Ответ:
+{{
+  "first_part": {{
+    "продукты": "SELECT * FROM products",
+    "вес больше 500": "WHERE product_weight_g > 500",
+    "длина меньше 30": "AND product_length_cm < 30",
+    "высота больше 15": "AND product_height_cm > 15",
+    "ширина меньше 20": "AND product_width_cm < 20",
+    "количество фото больше 2": "AND product_photos_qty > 2",
+    "название длиннее 10 символов": "AND product_name_lenght > 10",
+    "описание короче 200 символов": "AND product_description_lenght < 200",
+    "категория переводится как 'electronics'": "JOIN product_category_name_translation ON products.product_category_name = product_category_name_translation.product_category_name WHERE product_category_name_translation.product_category_name_english = 'electronics'"
+  }},
+  "second_part": [
+    "SELECT COUNT(*) FROM products WHERE product_weight_g > 500 AND product_length_cm < 30",
+    "SELECT COUNT(*) FROM products WHERE product_weight_g > 500 AND product_length_cm < 30 AND product_height_cm > 15 AND product_width_cm < 20",
+    "SELECT COUNT(*) FROM products JOIN product_category_name_translation ON products.product_category_name = product_category_name_translation.product_category_name WHERE product_weight_g > 500 AND product_length_cm < 30 AND product_height_cm > 15 AND product_width_cm < 20 AND product_photos_qty > 2 AND product_name_lenght > 10 AND product_description_lenght < 200 AND product_category_name_translation.product_category_name_english = 'electronics'"
+  ]
+}}
+
 ВАЖНЫЕ ПРАВИЛА:
 1. Ключи в first_part ДОЛЖНЫ точно совпадать с подстроками из пользовательского промпта
 2. Все SQL выражения должны быть корректны для схемы базы данных
@@ -93,6 +115,7 @@ class PromptConstructor:
 ПОЛЬЗОВАТЕЛЬСКИЙ ЗАПРОС: {user_prompt}
 ОЧЕНЬ ВАЖНО: ДЕЛАЙ ВСЕ РОВНО ИЗ ТОГО ЧТО ЕСТЬ В СХЕМЕ БД. ЕСЛИ КОЛОНОК НЕТ В БД - НЕ ПИШИ ИХ. КОНТЕКСТ БД ПРИЛАГАЕТСЯ.
 Кроме того для второй части делай ОЧЕНЬ атомарные предложения. То есть их должно быть как можно больше и во второй части они НЕ ДОЛЖНЫ ПОВТОРЯТЬСЯ!!!
+Условия атомарны в том виде, в котором порядке они идут в исходном промпте.
 
 Сгенерируй ответ строго в указанном JSON формате:
 """
