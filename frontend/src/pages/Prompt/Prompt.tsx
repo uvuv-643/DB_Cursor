@@ -65,9 +65,9 @@ export default function Prompt() {
           {error ? <Text color="danger">{error}</Text> : null}
           {result ? (
             <>
-              <Text variant="subheader-3">
-                Вот ваш результат. Если не нравится — введите промпт ещё раз и
-                нажмите кнопку «Отправить».
+              <Text variant="caption-2">
+                Если результат неудовлетворительный, исправьте промпт и ещё раз
+                нажмите «Отправить».
                 <br />
                 Если всё хорошо — нажмите кнопку «Продолжить».
               </Text>
@@ -76,7 +76,7 @@ export default function Prompt() {
                 jsonMapping={result as JsonMapping}
               />
               <div style={{ marginTop: 12 }}>
-                <Button view="outlined" onClick={() => navigate("/funnel")}>
+                <Button view="action" onClick={() => navigate("/funnel")}>
                   Продолжить
                 </Button>
               </div>

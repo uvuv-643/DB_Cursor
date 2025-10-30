@@ -80,7 +80,7 @@ const HighlightedText: React.FC<HighlightedTextProps> = ({
   let nextIndex = 0;
 
   return (
-    <div className={className} style={{ lineHeight: 1.6, wordSpacing: 2 }}>
+    <div className={className} style={{ lineHeight: 2, wordSpacing: 2 }}>
       {parts.map((part, index) => {
         const normalizedPart = part.toLowerCase();
         const isMatch = jsonMapping.hasOwnProperty(normalizedPart);
@@ -104,7 +104,7 @@ const HighlightedText: React.FC<HighlightedTextProps> = ({
                   backgroundColor: scheme.bg,
                   border: `1px solid ${scheme.border}`,
                   cursor: "pointer",
-                  padding: "2px 4px",
+                  padding: "1px 4px",
                   borderRadius: 4,
                   transition: "background-color 0.15s ease",
                 }}
