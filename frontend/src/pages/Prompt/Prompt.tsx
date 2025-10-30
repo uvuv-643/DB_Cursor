@@ -13,6 +13,7 @@ export default function Prompt() {
   const [error, setError] = React.useState<string | null>(null);
   const [loading, setLoading] = React.useState(false);
   const [result, setResult] = React.useState<unknown>(null);
+  const [snapshotText, setSnapshotText] = React.useState("");
   const navigate = useNavigate();
   function onSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -21,6 +22,7 @@ export default function Prompt() {
     setLoading(true);
     try {
       setError(null);
+      setSnapshotText(query);
       const data = await sendPrompt({
         query,
       });
@@ -72,7 +74,7 @@ export default function Prompt() {
                 Если всё хорошо — нажмите кнопку «Продолжить».
               </Text>
               <HighlightedText
-                text={query}
+                text={snapshotText}
                 jsonMapping={result as JsonMapping}
               />
               <div style={{ marginTop: 12 }}>
