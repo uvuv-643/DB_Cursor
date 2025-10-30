@@ -83,6 +83,12 @@ export default function Funnel() {
                   </div>
                   {i < pairs.length - 1 && (
                     <div className={styles.connector}>
+                      <div className={styles.percent}>
+                        {Math.round(
+                          (pairs[i + 1].count / pairs[i].count) * 100
+                        )}
+                        %
+                      </div>
                       <Trapezoid
                         topWidth={sizes[i]}
                         bottomWidth={sizes[i + 1]}
@@ -97,7 +103,13 @@ export default function Funnel() {
         </div>
 
         {selectedStage && (
-          <div className={styles.sqlPanel}>
+          <div
+            className={styles.sqlPanel}
+            style={{
+              boxShadow: "0 0 10px 0 rgba(0, 0, 0, 0.1)",
+              marginTop: 10,
+            }}
+          >
             <div
               style={{
                 fontSize: 12,
