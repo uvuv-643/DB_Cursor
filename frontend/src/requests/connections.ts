@@ -25,6 +25,7 @@ export async function createConnectionToken(
     headers: {
       "Content-Type": "application/json",
     },
+    credentials: "include",
     body: JSON.stringify({
       host: credentials.host,
       port: String(credentials.port),
