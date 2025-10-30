@@ -75,7 +75,7 @@ export default function Prompt() {
               </Text>
               <HighlightedText
                 text={snapshotText}
-                jsonMapping={result as JsonMapping}
+                jsonMapping={(result as any).first_part as JsonMapping}
               />
               <div style={{ marginTop: 12 }}>
                 <Button view="action" onClick={() => navigate("/funnel")}>
