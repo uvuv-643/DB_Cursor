@@ -88,20 +88,16 @@ class PromptConstructor:
 }}
 
 Пример 3 (с JOIN и переводом):
-Пользователь: "товары у которых вес больше 2 и объем меньше 50 где перевод категории на английский 'home_appliances'"
+Пользователь: "товары у которых перевод категории на английский 'home_appliances'"
 
 Ответ:
 {{
   "first_part": {{
     "товары": "SELECT * FROM products",
-    "вес больше 2": "WHERE weight > 2",
-    "объем меньше 50": "AND volume < 50",
     "перевод категории на английский 'home_appliances'": "JOIN category_translation ON products.category_id = category_translation.category_id WHERE category_translation.category_name_english = 'home_appliances'"
   }},
   "second_part": [
-    "SELECT COUNT(*) FROM products WHERE weight > 2",
-    "SELECT COUNT(*) FROM products WHERE weight > 2 AND volume < 50", 
-    "SELECT COUNT(*) FROM products JOIN category_translation ON products.category_id = category_translation.category_id WHERE weight > 2 AND volume < 50 AND category_translation.category_name_english = 'home_appliances'"
+    "SELECT COUNT(*) FROM products JOIN category_translation ON products.category_id = category_translation.category_id WHERE category_translation.category_name_english = 'home_appliances'"
   ]
 }}
 
@@ -113,6 +109,7 @@ class PromptConstructor:
 5. Если запрос невозможно корректно обработать - верни {{"first_part": {{}}, "second_part": []}}
 
 ПОЛЬЗОВАТЕЛЬСКИЙ ЗАПРОС: {user_prompt}
+ОЧЕНЬ ВАЖНО: ДЕЛАЙ ВСЕ РОВНО ИЗ ТОГО ЧТО ЕСТЬ В СХЕМЕ БД. ЕСЛИ КОЛОНОК НЕТ В БД - НЕ ПИШИ ИХ. КОНТЕКСТ БД ПРИЛАГАЕТСЯ.
 
 Сгенерируй ответ строго в указанном JSON формате:
 """
