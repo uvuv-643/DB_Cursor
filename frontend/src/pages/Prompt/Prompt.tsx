@@ -6,12 +6,14 @@ import { sendPrompt } from "../../requests/prompts";
 import HighlightedText, {
   JsonMapping,
 } from "../../components/HighlightedText/HighlightedText";
+import { useNavigate } from "react-router";
 
 export default function Prompt() {
   const [query, setQuery] = React.useState("");
   const [error, setError] = React.useState<string | null>(null);
   const [loading, setLoading] = React.useState(false);
   const [result, setResult] = React.useState<unknown>(null);
+  const navigate = useNavigate();
   function onSubmit(e: React.FormEvent) {
     e.preventDefault();
   }
@@ -62,7 +64,23 @@ export default function Prompt() {
           </form>
           {error ? <Text color="danger">{error}</Text> : null}
           {result ? (
-            <HighlightedText text={query} jsonMapping={result as JsonMapping} />
+            <>
+              <Text variant="subheader-3">
+                Вот ваш результат. Если не нравится — введите промпт ещё раз и
+                нажмите кнопку «Отправить».
+                <br />
+                Если всё хорошо — нажмите кнопку «Продолжить».
+              </Text>
+              <HighlightedText
+                text={query}
+                jsonMapping={result as JsonMapping}
+              />
+              <div style={{ marginTop: 12 }}>
+                <Button view="outlined" onClick={() => navigate("/funnel")}>
+                  Продолжить
+                </Button>
+              </div>
+            </>
           ) : null}
         </div>
       </div>
