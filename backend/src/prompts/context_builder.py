@@ -3,6 +3,7 @@ from psycopg2.extras import DictCursor
 import sqlite3
 from collections import defaultdict
 import textwrap
+import re
 
 
 class ContextConstructor:
@@ -26,13 +27,29 @@ class ContextConstructor:
             sqlite_path: path to SQLite database file
         """
         self.db_backend = db_backend
-        self.postgres_config = postgres_config or {
-            "host": "localhost",
-            "port": 5432,
-            "dbname": "your_db_name",
-            "user": "your_username",
-            "password": "your_password",
-        }
+        pattern = re.compile(
+            r'(?P<dialect>\w+)\+(?P<driver>\w+)://'
+            r'(?P<user>[^:]+):(?P<password>[^@]+)@'
+            r'(?P<host>[^:]+):(?P<port>\d+)/(?P<dbname>\w+)'
+        )
+
+        match = pattern.match(postgres_config)
+        if match:
+            self.postgres_config ={
+                "host": match.group("host"),
+                "port": int(match.group("port")),
+                "dbname": match.group("dbname"),
+                "user": match.group("user"),
+                "password": match.group("password"),
+            }
+        else:
+            self.postgres_config =  {
+                "host": "localhost",
+                "port": 5432,
+                "dbname": "your_db_name",
+                "user": "your_username",
+                "password": "your_password",
+            }
         self.sqlite_path = sqlite_path
     
     @staticmethod

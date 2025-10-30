@@ -86,7 +86,7 @@ async def prolong_connection_token(request: Request, response: Response):
         secure=False
     )
 
-    return {"status": "token-prolonged"}
+    return {"status": "token-prolonged",'data':db_url}
 
 
 #==================================================

@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException, Request, Response
 import jwt
 import openai
-
+import json
 from ..clients.redis_client import redis_client as redis
 from ..prompts.context_builder import ContextConstructor
 from ..prompts.prompt_builder import PromptConstructor
@@ -19,7 +19,7 @@ router = APIRouter(prefix="/prompts", tags=["prompts"])
 
 
 @router.post("/")
-async def run_prompt(request: Prompt, response: Response):
+async def run_prompt(promt: Prompt, response: Response, request: Request):
     token_id = request.cookies.get('db_token_id')
     if not token_id:
         raise HTTPException(status_code=401, detail="Token cookie not found")
@@ -41,7 +41,7 @@ async def run_prompt(request: Prompt, response: Response):
         yandex_cloud_folder=YANDEX_CLOUD_FOLDER,
         yandex_cloud_model=YANDEX_CLOUD_MODEL
     )
-    prompt = prompt_constructor.build_prompt(request.prompt, context)
+    prompt = prompt_constructor.build_prompt(promt.prompt, context)
 
     client = openai.OpenAI(
         api_key=YANDEX_CLOUD_API_KEY,
@@ -55,5 +55,8 @@ async def run_prompt(request: Prompt, response: Response):
         temperature=0.8,
         max_output_tokens=1500
     )
-    json_response = response.output[0].content[0].json()
-    return json_response
+    json_response = response.output[0].content[0].text
+    json_response = json_response.replace("```",'')
+    print(json_response)
+    data = json.loads(json_response)
+    return data
