@@ -262,3 +262,5 @@ coverage/
 **/__pycache__
 scripts/db.sqlite
 backend/db.sqlite
+
+frontend/package-lock.json
