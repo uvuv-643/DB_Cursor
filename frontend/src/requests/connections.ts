@@ -1,3 +1,5 @@
+import { getApiBaseUrl } from "./global";
+
 export type ConnectionCredentials = {
   host: string;
   port: string | number;
@@ -11,11 +13,6 @@ export type ConnectionTokenResponse = {
   tokenId?: string;
   [key: string]: unknown;
 };
-
-function getApiBaseUrl(): string {
-  const base = "https://api.uvuv643.ru";
-  return base?.replace(/\/$/, "") || "";
-}
 
 export async function createConnectionToken(
   credentials: ConnectionCredentials
