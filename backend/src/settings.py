@@ -3,12 +3,12 @@ import os
 from dotenv import load_dotenv
 
 
-load_dotenv(".env")
+load_dotenv()
 
 # Redis
-REDIS_HOST = os.getenv("REDIS_HOST", "localhost")
+REDIS_HOST = os.getenv("REDIS_HOST", "redis")
 REDIS_PORT = int(os.getenv("REDIS_PORT", 6379))
-REDIS_PASSWORD = os.getenv("REDIS_PASSWORD") or None
+REDIS_PASSWORD = os.getenv("REDIS_PASSWORD", "your_password")
 
 # Encryption
 SECRET_KEY = os.getenv("SECRET_KEY")
