@@ -1,14 +1,13 @@
+import os
+
 from fastapi import HTTPException
-import jwt 
-import os 
-from .redis_client import redis_client as redis
-from dotenv import load_dotenv
-from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
+import jwt
+from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker
 
-load_dotenv(".env")
+from ..clients.redis_client import redis_client as redis
+from settings import SECRET_KEY
 
-SECRET_KEY = os.getenv("SECRET_KEY")
 
 async def get_dburl_user(key: str)->str:
     """

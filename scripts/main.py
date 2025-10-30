@@ -15,7 +15,8 @@ YANDEX_CLOUD_MODEL = os.getenv("YANDEX_CLOUD_MODEL")
 builder = ContextConstructor(db_backend="sqlite", sqlite_path="./db.sqlite")
 context = builder.build()
 
-user_prompt = "Покажи количество клиентов которые живут в городах, и zip коды которых начинаются на 12 и 13"
+# user_prompt = "Покажи количество клиентов которые живут в городах, и zip коды которых начинаются на 12 и 13"
+user_prompt = "Определи клиентов с большим кол-вом заказов."
 
 constructor = PromptConstructor(
     yandex_cloud_folder=YANDEX_CLOUD_FOLDER,

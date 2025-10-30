@@ -1,25 +1,25 @@
-from fastapi import APIRouter, Response,Request,HTTPException
-from .connection_schemas import Creditians
-import jwt
-import uuid
-import os,secrets
 from datetime import datetime, timedelta
+import secrets
+import uuid
+
+from fastapi import APIRouter, HTTPException, Request, Response
+import jwt
 from sqlalchemy import text
-from .redis_client import redis_client as redis
-from dotenv import load_dotenv 
-router = APIRouter(prefix="/connection")
-load_dotenv(".env")
-from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
+from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker
 
+from ..clients.redis_client import redis_client as redis
+from ..connections.schemas import Credentials
+from ..settings import EXPIRE_MINUTES, SECRET_KEY
 
-EXPIRE_MINUTES = int(os.getenv("EXPIRE_MINUTES"))
-SECRET_KEY = os.getenv("SECRET_KEY")
+
+router = APIRouter(prefix="/connections", tags=["connections"])
+
 
 @router.post("/")
-async def make_connection_token(creditians: Creditians, response: Response):
+async def make_connection_token(credentials: Credentials, response: Response):
     token_id = str(uuid.uuid4()) 
-    db_url = f"postgresql+asyncpg://{creditians.username}:{creditians.password}@{creditians.host}:{creditians.port}/{creditians.database}"
+    db_url = f"postgresql+asyncpg://{credentials.username}:{credentials.password}@{credentials.host}:{credentials.port}/{credentials.database}"
     engine = create_async_engine(db_url, future=True, echo=False, pool_size=5, max_overflow=10)
     async_session = sessionmaker(engine, expire_on_commit=False, class_=AsyncSession)
 
@@ -30,12 +30,12 @@ async def make_connection_token(creditians: Creditians, response: Response):
         safe_user = readonly_user.replace('"', '""')
         safe_pass = readonly_pass.replace("'", "''")
         await session.execute(text(f'CREATE USER "{safe_user}" WITH PASSWORD \'{safe_pass}\''))
-        await session.execute(text(f'GRANT CONNECT ON DATABASE "{creditians.database}" TO "{safe_user}"'))
+        await session.execute(text(f'GRANT CONNECT ON DATABASE "{credentials.database}" TO "{safe_user}"'))
         await session.execute(text(f'GRANT USAGE ON SCHEMA public TO "{safe_user}"'))
         await session.execute(text(f'GRANT SELECT ON ALL TABLES IN SCHEMA public TO "{safe_user}"'))
         await session.commit()
     await engine.dispose()
-    db_url = f"postgresql+asyncpg://{readonly_user}:{readonly_pass}@{creditians.host}:{creditians.port}/{creditians.database}"
+    db_url = f"postgresql+asyncpg://{readonly_user}:{readonly_pass}@{credentials.host}:{credentials.port}/{credentials.database}"
 
     payload = {
         "db_url": db_url,

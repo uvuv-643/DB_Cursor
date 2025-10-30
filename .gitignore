@@ -261,3 +261,4 @@ coverage/
 **/certbot
 **/__pycache__
 scripts/db.sqlite
+backend/db.sqlite
