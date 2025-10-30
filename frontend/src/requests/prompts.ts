@@ -6,6 +6,9 @@ export type SendPromptRequest = {
 
 export type SendPromptResponse = unknown;
 
+export let secondPartResults = [];
+export let thirdPartResults = [];
+
 export async function sendPrompt(
   params: SendPromptRequest
 ): Promise<SendPromptResponse> {
@@ -26,5 +29,8 @@ export async function sendPrompt(
     throw new Error(`Request failed: ${response.status} ${text}`);
   }
 
-  return (await response.json()) as SendPromptResponse;
+  const data = (await response.json()) as SendPromptResponse;
+  secondPartResults = (data as any).second_part;
+  thirdPartResults = (data as any).third_part;
+  return data;
 }
