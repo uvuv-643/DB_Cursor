@@ -3,6 +3,9 @@ import styles from "./Prompt.module.css";
 
 import { Button, Text, TextArea } from "@gravity-ui/uikit";
 import { sendPrompt } from "../../requests/prompts";
+import HighlightedText, {
+  JsonMapping,
+} from "../../components/HighlightedText/HighlightedText";
 
 export default function Prompt() {
   const [query, setQuery] = React.useState("");
@@ -59,9 +62,7 @@ export default function Prompt() {
           </form>
           {error ? <Text color="danger">{error}</Text> : null}
           {result ? (
-            <pre style={{ whiteSpace: "pre-wrap", wordBreak: "break-word" }}>
-              {JSON.stringify(result, null, 2)}
-            </pre>
+            <HighlightedText text={query} jsonMapping={result as JsonMapping} />
           ) : null}
         </div>
       </div>
