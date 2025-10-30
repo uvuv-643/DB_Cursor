@@ -51,24 +51,6 @@ class PromptConstructor:
 
 ПРИМЕРЫ:
 
-Пример 1 (МОЙ ПРИМЕР):
-Пользователь: "продукты у которых ширина больше 10 и высота меньше 25 где перевод на английский это 'fashion_shoes'"
-
-Ответ:
-{{
-  "first_part": {{
-    "продукты": "SELECT * FROM products",
-    "ширина больше 10": "WHERE width > 10", 
-    "высота меньше 25": "AND height < 25",
-    "перевод на английский это 'fashion_shoes'": "JOIN product_category_name_translation ON products.product_category_name = product_category_name_translation.product_category_name WHERE product_category_name_translation.product_category_name_english = 'fashion_shoes'"
-  }},
-  "second_part": [
-    "SELECT COUNT(*) FROM products WHERE width > 10",
-    "SELECT COUNT(*) FROM products WHERE width > 10 AND height < 25",
-    "SELECT COUNT(*) FROM products JOIN product_category_name_translation ON products.product_category_name = product_category_name_translation.product_category_name WHERE width > 10 AND height < 25 AND product_category_name_translation.product_category_name_english = 'fashion_shoes'"
-  ]
-}}
-
 Пример 2:
 Пользователь: "заказы созданные после 2023 года со статусом 'доставлен' где клиент из города 'Москва'"
 
