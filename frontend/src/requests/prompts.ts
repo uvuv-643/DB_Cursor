@@ -6,8 +6,8 @@ export type SendPromptRequest = {
 
 export type SendPromptResponse = unknown;
 
-export let secondPartResults = [];
-export let thirdPartResults = [];
+export let secondPartResults = null;
+export let thirdPartResults = null;
 
 export async function sendPrompt(
   params: SendPromptRequest
