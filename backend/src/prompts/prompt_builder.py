@@ -34,6 +34,7 @@ class PromptConstructor:
 2. Каждый следующий запрос должен возвращать ПОДМНОЖЕСТВО данных предыдущего
 3. Запросы должны быть корректными для схемы базы данных
 4. Используй WHERE, JOIN, дополнительные условия для создания "воронки"
+5. Возвращай COUNT а не просто *.
 
 ФОРМАТ ОТВЕТА - строго валидный JSON:
 {{
@@ -62,9 +63,9 @@ class PromptConstructor:
     "перевод на английский это 'fashion_shoes'": "JOIN product_category_name_translation ON products.product_category_name = product_category_name_translation.product_category_name WHERE product_category_name_translation.product_category_name_english = 'fashion_shoes'"
   }},
   "second_part": [
-    "SELECT * FROM products WHERE width > 10",
-    "SELECT * FROM products WHERE width > 10 AND height < 25",
-    "SELECT * FROM products JOIN product_category_name_translation ON products.product_category_name = product_category_name_translation.product_category_name WHERE width > 10 AND height < 25 AND product_category_name_translation.product_category_name_english = 'fashion_shoes'"
+    "SELECT COUNT(*) FROM products WHERE width > 10",
+    "SELECT COUNT(*) FROM products WHERE width > 10 AND height < 25",
+    "SELECT COUNT(*) FROM products JOIN product_category_name_translation ON products.product_category_name = product_category_name_translation.product_category_name WHERE width > 10 AND height < 25 AND product_category_name_translation.product_category_name_english = 'fashion_shoes'"
   ]
 }}
 
@@ -80,9 +81,9 @@ class PromptConstructor:
     "клиент из города 'Москва'": "JOIN customers ON orders.customer_id = customers.id WHERE customers.city = 'Москва'"
   }},
   "second_part": [
-    "SELECT * FROM orders WHERE created_at > '2023-01-01'",
-    "SELECT * FROM orders WHERE created_at > '2023-01-01' AND status = 'delivered'",
-    "SELECT * FROM orders JOIN customers ON orders.customer_id = customers.id WHERE created_at > '2023-01-01' AND status = 'delivered' AND customers.city = 'Москва'"
+    "SELECT COUNT(*) FROM orders WHERE created_at > '2023-01-01'",
+    "SELECT COUNT(*) FROM orders WHERE created_at > '2023-01-01' AND status = 'delivered'",
+    "SELECT COUNT(*) FROM orders JOIN customers ON orders.customer_id = customers.id WHERE created_at > '2023-01-01' AND status = 'delivered' AND customers.city = 'Москва'"
   ]
 }}
 
@@ -98,9 +99,9 @@ class PromptConstructor:
     "перевод категории на английский 'home_appliances'": "JOIN category_translation ON products.category_id = category_translation.category_id WHERE category_translation.category_name_english = 'home_appliances'"
   }},
   "second_part": [
-    "SELECT * FROM products WHERE weight > 2",
-    "SELECT * FROM products WHERE weight > 2 AND volume < 50", 
-    "SELECT * FROM products JOIN category_translation ON products.category_id = category_translation.category_id WHERE weight > 2 AND volume < 50 AND category_translation.category_name_english = 'home_appliances'"
+    "SELECT COUNT(*) FROM products WHERE weight > 2",
+    "SELECT COUNT(*) FROM products WHERE weight > 2 AND volume < 50", 
+    "SELECT COUNT(*) FROM products JOIN category_translation ON products.category_id = category_translation.category_id WHERE weight > 2 AND volume < 50 AND category_translation.category_name_english = 'home_appliances'"
   ]
 }}
 

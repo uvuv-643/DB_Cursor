@@ -3,6 +3,7 @@ import jwt
 import openai
 import json
 from ..clients.redis_client import redis_client as redis
+from sqlalchemy import create_engine, text
 from ..prompts.context_builder import ContextConstructor
 from ..prompts.prompt_builder import PromptConstructor
 from ..prompts.schemas import Prompt
@@ -59,4 +60,14 @@ async def run_prompt(promt: Prompt, response: Response, request: Request):
     json_response = json_response.replace("```",'')
     print(json_response)
     data = json.loads(json_response)
+    
+    queries = data["second_part"]
+    results = []
+    sync_db_url = db_url.replace("+asyncpg", "+psycopg2")
+    engine = create_engine(sync_db_url, future=True)
+    with engine.connect() as con:
+        for q in queries:
+            r = con.execute(text(q))
+            results.append(r.scalar())
+    data["third_part"] = results
     return data
